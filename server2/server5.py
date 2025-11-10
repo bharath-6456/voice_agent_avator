@@ -331,6 +331,18 @@ async def pdf_page(session_id: str, page: int):
         logger.exception("[PDF] Render failed")
         raise HTTPException(status_code=500, detail="Render failed")
 
+@app.get("/")
+async def serve_index():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "../index.html"))
+
+@app.get("/login")
+async def serve_login():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "../login.html"))
+
+@app.get("/options")
+async def serve_options():
+    return FileResponse(os.path.join(os.path.dirname(__file__), "../options.html"))
+
 
 
 

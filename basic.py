@@ -161,15 +161,15 @@ async def offer(request: dict, background_tasks: BackgroundTasks):
 
 @app.get("/")
 async def serve_index():
-    return FileResponse("voice_agent_avator/index.html")
+    return FileResponse(os.path.join(os.path.dirname(__file__), "index.html"))
 
 @app.get("/login")
 async def serve_login():
-    return FileResponse("voice_agent_avator/login.html")
+    return FileResponse(os.path.join(os.path.dirname(__file__), "login.html"))
 
 @app.get("/options")
 async def serve_options():
-    return FileResponse("voice_agent_avator/options.html")
+    return FileResponse(os.path.join(os.path.dirname(__file__), "options.html"))
 '''
 def get_embedding(text: str):
     logger.debug(f"🔢 [EMBEDDING] Generating embedding for text: '{text[:50]}{'...' if len(text) > 50 else ''}'")

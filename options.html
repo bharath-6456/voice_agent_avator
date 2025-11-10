@@ -200,8 +200,12 @@
         function selectOption(option) {
             // Store the selected option in localStorage
             localStorage.setItem('selectedOption', option);
-            // Redirect to the static server, which will serve the frontend
-            window.location.href = 'http://localhost:3000/';
+            // Redirect to the appropriate backend server
+            if (option === 'rag') {
+                window.location.href = 'http://localhost:8000/';
+            } else {
+                window.location.href = 'http://localhost:8001/';
+            }
         }
 
         function logout() {
