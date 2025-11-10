@@ -16,9 +16,10 @@ from agent_tools import run_bot2
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI, Request,WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse,JSONResponse,Response
+from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 from sentence_transformers import SentenceTransformer
-from pinecone import Pinecone
+
 
 from pipecat.transports.network.webrtc_connection import IceServer, SmallWebRTCConnection
 #from shared_state import live_transcriptions
@@ -26,6 +27,15 @@ from pipecat.transports.network.webrtc_connection import IceServer, SmallWebRTCC
 load_dotenv(override=True)
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 LOG_DIR = "logs"
 #api_key = os.getenv("PINECONE_API_KEY")
 #environment = "us-east-1"
@@ -42,8 +52,7 @@ LOG_DIR = "logs"
 # Store connections by pc_id
 pcs_map: Dict[str, SmallWebRTCConnection] = {}
 
-XIRSYS_USERNAME = os.getenv("XIRSYS_USERNAME")
-XIRSYS_CREDENTIAL = os.getenv("XIRSYS_CREDENTIAL")
+
 
 # Configure ICE servers using your Xirsys credentials
 #ice_servers = [
@@ -152,7 +161,15 @@ async def offer(request: dict, background_tasks: BackgroundTasks):
 
 @app.get("/")
 async def serve_index():
-    return FileResponse("index.html")
+    return FileResponse("voice_agent_avator/index.html")
+
+@app.get("/login")
+async def serve_login():
+    return FileResponse("voice_agent_avator/login.html")
+
+@app.get("/options")
+async def serve_options():
+    return FileResponse("voice_agent_avator/options.html")
 '''
 def get_embedding(text: str):
     logger.debug(f"🔢 [EMBEDDING] Generating embedding for text: '{text[:50]}{'...' if len(text) > 50 else ''}'")
@@ -381,7 +398,7 @@ if __name__ == "__main__":
         "--host", default="localhost", help="Host for HTTP server (default: localhost)"
     )
     parser.add_argument(
-        "--port", type=int, default=8000, help="Port for HTTP server (default: 8000)"
+        "--port", type=int, default=8001, help="Port for HTTP server (default: 8001)"
     )
     parser.add_argument("--verbose", "-v", action="count")
     args = parser.parse_args()
